@@ -29,24 +29,26 @@ struct mainOrderView: View {
     }
     
     enum BottomSegmentType: Int, CaseIterable, Identifiable {
-            case drink
-            case food
-            case product
-            
-            var id: Int { self.rawValue }
-            
-            var title: String {
-                switch self {
-                case .drink: return "음료"
-                case .food: return "푸드"
-                case .product: return "상품"
-                }
+        case drink
+        case food
+        case product
+        
+        var id: Int { self.rawValue }
+        
+        var title: String {
+            switch self {
+            case .drink: return "음료"
+            case .food: return "푸드"
+            case .product: return "상품"
             }
         }
-        
-        // 선택된 세그먼트 상태 추가
-        @State private var selectedTopSegment: TopSegmentType = .fullMenu
-        @State private var selectedBottomSegment: BottomSegmentType = .drink
+    }
+    
+    // 선택된 세그먼트 상태 추가
+    @State private var selectedTopSegment: TopSegmentType = .fullMenu
+    @State private var selectedBottomSegment: BottomSegmentType = .drink
+    
+    @State private var isShowingSheet = false
     
     var body: some View {
         VStack {
@@ -60,8 +62,8 @@ struct mainOrderView: View {
             }
             topSegment
             bottomSegment
-            Divider()
             bottomCoffeeMenu
+            SheetButton
         }
     }
     //상단 세그먼트
@@ -79,18 +81,21 @@ struct mainOrderView: View {
     }
     
     private var bottomSegment: some View {
-        HStack {
-            Spacer()
-                .frame(width: 10)
-            bottomCustomSegment(
-                selection: $selectedBottomSegment,
-                options: BottomSegmentType.allCases,
-                titles: [.drink: "음료", .food: "푸드", .product: "상품"]
-            )
-            .padding(.horizontal, 20)
-            .padding(.top, 10)
-            .frame(width: 200, height: 40)
-            Spacer()
+        VStack {
+            HStack {
+                Spacer()
+                    .frame(width: 10)
+                bottomCustomSegment(
+                    selection: $selectedBottomSegment,
+                    options: BottomSegmentType.allCases,
+                    titles: [.drink: "음료", .food: "푸드", .product: "상품"]
+                )
+                .padding(.horizontal, 20)
+                .padding(.top, 10)
+                .frame(width: 200, height: 40)
+                Spacer()
+            }
+            Divider()
         }
     }
     
@@ -173,11 +178,6 @@ struct mainOrderView: View {
             }
         }
     }
-
-            
-    
-    
-    
     
     private var bottomCoffeeMenu: some View {
         ScrollView {
@@ -188,7 +188,41 @@ struct mainOrderView: View {
             }
         }
     }
-}
+    
+    private var SheetButton: some View {
+        Button(action: {
+            isShowingSheet.toggle()
+        }) {
+            ZStack(alignment: .leading) {
+                Rectangle()
+                    .fill(Color.black02)
+                    .frame(width: .infinity, height: 54)
+                VStack {
+                    HStack {
+                        Text("주문할 매장을 선택해주세요")
+                            .font(.PretendardSemiBold16)
+                            .foregroundStyle(Color.white)
+                            .padding(.leading, 20)
+                        Spacer()
+                        Image(systemName: "chevron.down")
+                            .foregroundStyle(Color.white)
+                            .frame(width:20, height: 20)
+                            .padding(.trailing, 20)
+                    }
+                    Rectangle()
+                        .fill(Color.gray06)
+                        .frame(width: .infinity, height: 1)
+                        .padding([.leading, .trailing], 20)
+                        
+                }
+            }
+                
+        }
+        .sheet(isPresented: $isShowingSheet) {
+            StoreView()
+            }
+        }
+    }
 
 #Preview {
     mainOrderView()

@@ -22,6 +22,7 @@ struct TabBarView: View {
 
 
             Tab("Order", image: "order") {
+                mainOrderView()
             }
 
 
@@ -35,6 +36,9 @@ struct TabBarView: View {
             
         }
         .tint(.green02)
+        .onAppear() {
+                    UITabBar.appearance().barTintColor = .white
+                }
     }
 }
 
