@@ -27,6 +27,7 @@ struct TabBarView: View {
 
 
             Tab("Shop", image: "shop") {
+                ShopView()
             }
 
 

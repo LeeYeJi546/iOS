@@ -183,17 +183,19 @@ struct OtherView: View {
             Text("고객지원")
                 .font(.PretendardSemiBold16)
                 .foregroundStyle(.black)
-            HStack(alignment: .top, spacing: 130) {
+            HStack(alignment: .top, spacing: 120) {
                 VStack(alignment: .leading, spacing: 20) {
                     MenuButton(
                         picture: "storecare",
                         menuName:"스토어 케어"
                     )
                     
-                    MenuButton(
-                        picture: "location",
-                        menuName:"매장 정보"
-                    )
+                    NavigationLink(destination: StoreInfoView()) {
+                        MenuButton(
+                            picture: "location",
+                            menuName:"매장 정보"
+                        )
+                    }
                     
                     MenuButton(
                         picture: "myreview",
@@ -221,5 +223,7 @@ struct OtherView: View {
     
 
 #Preview {
-    OtherView()
+    NavigationView {
+        OtherView()
+    }
 }

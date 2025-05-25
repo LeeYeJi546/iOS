@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import MapKit
 
 struct StoreView: View {
     
@@ -34,6 +35,11 @@ struct StoreView: View {
     
     var viewModel: GeoJsonStoreViewModel = .init()
     
+    @State private var showmap = false
+    
+    @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+
+    
     var body: some View {
         VStack {
             VStack {
@@ -42,8 +48,10 @@ struct StoreView: View {
                     Text("매장 설정")
                         .font(.PretendardMedium16)
                     Spacer()
-                    Button(action: {}) {
-                        Image(.map)
+                    Button(action: {
+                        showmap.toggle()
+                    }) {
+                        Image(showmap ? "list" : "map")
                     }
                 }
                 .padding(.bottom, 24)
@@ -56,10 +64,15 @@ struct StoreView: View {
                 
                 
                 storeSegment
-                storeList
+                if showmap {
+                    storeMap
+                }
+                else {
+                    storeList
+                }
             }
         }
-        .padding([.leading, .trailing], 32.5)
+        .safeAreaPadding(.horizontal, 20)
     }
     
     
@@ -111,26 +124,32 @@ struct StoreView: View {
     private var storeList: some View {
         ScrollView {
             VStack {
-                    HStack {
-                        Image("store")
-                            .resizable()
-                            .frame(width: 83, height: 83)
-                        VStack {
-                            if let storeinfo = viewModel.storelist {
-                                Text("\(storeinfo.Sotre_nm)")
-                                    .font(.PretendardSemiBold13)
-                                    .foregroundStyle(Color.black03)
-                                Text("\(storeinfo.Address)")
-                                    .font(.PretendardMedium10)
-                                    .foregroundStyle(Color.gray02)
-                                
-                            }
+                HStack {
+                    Image("store")
+                        .resizable()
+                        .frame(width: 83, height: 83)
+                    VStack {
+                        if let storeinfo = viewModel.storelist {
+                            Text("\(storeinfo.Sotre_nm)")
+                                .font(.PretendardSemiBold13)
+                                .foregroundStyle(Color.black03)
+                            Text("\(storeinfo.Address)")
+                                .font(.PretendardMedium10)
+                                .foregroundStyle(Color.gray02)
+                            
                         }
                     }
+                }
             }
         }
     }
+    
+    private var storeMap: some View {
+        Map(initialPosition: .region(region))
+    }
 }
+
+    
 
 #Preview {
     StoreView()

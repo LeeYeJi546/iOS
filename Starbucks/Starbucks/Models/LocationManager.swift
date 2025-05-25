@@ -17,6 +17,10 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
     override init() {
         super.init()
         setupLocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
     }
     
     private func setupLocationManager() {
@@ -35,4 +39,22 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
 //        let 
 //        
 //    }
+    
+    //sheet뷰 매장지도
+    var region = MKCoordinateRegion(
+        center: CLLocationCoordinate2D(latitude: 0, longitude: 0),
+        span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+    )
+        
+    func locationManager(_ locationManager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.first else { return }
+            
+        DispatchQueue.main.async {
+            self.region = MKCoordinateRegion(
+                center: location.coordinate,
+                span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+            )
+        }
+        print(location.coordinate)
+    }
 }
