@@ -11,8 +11,14 @@ import MapKit
 import Observation
 
 @Observable
-class LocationManager: NSObject, CLLocationManagerDelegate {
+class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
+    
+    static let shared = LocationManager()
+        
     private let locationManager = CLLocationManager()
+    
+    var currentLocation: CLLocation?
+    var currentHeading: CLHeading?
     
     override init() {
         super.init()
@@ -57,4 +63,11 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
         }
         print(location.coordinate)
     }
+}
+
+
+struct Marker: Identifiable {
+    let id = UUID()
+    let coordinate: CLLocationCoordinate2D
+    let title: String
 }

@@ -44,7 +44,7 @@ struct OtherView: View {
                     .frame(height: 50)
                 Support
                 Spacer()
-                    .frame(height: 41)
+                    .frame(height: 135)
             }
         }
     }

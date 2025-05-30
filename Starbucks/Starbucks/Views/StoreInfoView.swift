@@ -24,9 +24,14 @@ struct StoreInfoView: View {
         }
     }
     
+    @Environment(\.dismiss) var dismiss
+    
     @State private var selectedFindSegment: FindSegmentType = .findStore
     
-    @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+    @Bindable private var locationManager = LocationManager.shared
+    @Bindable private var viewModel: MapViewModel = .init()
+    @Namespace var mapScope
+        
     
     
     var body: some View {
@@ -34,9 +39,15 @@ struct StoreInfoView: View {
             HStack(alignment: .center) {
                 Spacer()
                     .frame(width: 30)
-                Image(systemName: "chevron.left")
+                Button (action: {
+                    dismiss()
+                }) {
+                    Image(systemName: "chevron.left")
+                        .foregroundColor(.black)
+                        .frame(width: 9, height: 15)
+                }
                 Spacer()
-                    .frame(width: 130)
+                    .frame(width: 120)
                 Text("매장 찾기")
                     .font(.PretendardMedium16)
                 Spacer()
@@ -100,7 +111,32 @@ struct StoreInfoView: View {
     }
     
     private var MapView : some View {
-        Map(initialPosition: .region(region))
+        ZStack(alignment: .bottomTrailing) {
+            Map(position: $viewModel.cameraPosition) {
+                ForEach(viewModel.makers, id: \.id, content: { marker in
+                    Annotation(marker.title, coordinate: marker.coordinate, content: {
+                        Image(systemName: "mappin.circle.fill")
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundStyle(Color.red)
+                    })
+                })
+                
+                UserAnnotation(anchor: .center)
+            }
+            Button(action: {
+                withAnimation {
+                    viewModel.cameraPosition = .userLocation(fallback: .automatic)
+                }
+            }) {
+                Image(.presentlocation)
+                    .resizable()
+                    .frame(width: 35, height: 35)
+            }
+            .offset(x: -30, y: -10)
+        }
+        .mapScope(mapScope)
     }
 }
 

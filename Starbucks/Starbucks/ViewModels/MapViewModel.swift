@@ -11,7 +11,7 @@ import MapKit
 import Observation
 
 @Observable
-class GeoJsonStoreViewModel {
+class MapViewModel {
     var storelist: GeoJsonModel?
     
     func loadstorelist(completion: @escaping (Result<GeoJsonModel, Error>) -> Void) {
@@ -32,10 +32,18 @@ class GeoJsonStoreViewModel {
             completion(.failure(error))
         }
     }
-}
-
-@Observable
-final class MapViewModel {
     
     var cameraPosition: MapCameraPosition = .userLocation(fallback: .automatic)
+    var currentMapCenter: CLLocationCoordinate2D?
+        
+    // 마커
+    var makers: [Marker] = [
+            .init(coordinate: .init(latitude: 37.455175, longitude: 127.133486), title: "가천대학교 AI공학관"),
+            .init(coordinate: .init(latitude: 37.519859, longitude: 127.127439), title: "KSPO DOME (올림픽체조경기장)")
+    ]
+    
+    var region: MKCoordinateRegion = MKCoordinateRegion(
+            center: CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780),
+            span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+        )
 }

@@ -33,11 +33,10 @@ struct StoreView: View {
     
     @State var store: String = ""
     
-    var viewModel: GeoJsonStoreViewModel = .init()
-    
     @State private var showmap = false
     
-    @State var region = MKCoordinateRegion(center: CLLocationCoordinate2D(latitude: 37.5665, longitude: 126.9780), span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05))
+    @Bindable private var locationManager = LocationManager.shared
+    @Bindable private var viewModel: MapViewModel = .init()
 
     
     var body: some View {
@@ -145,7 +144,19 @@ struct StoreView: View {
     }
     
     private var storeMap: some View {
-        Map(initialPosition: .region(region))
+        Map(position: $viewModel.cameraPosition) {
+                    ForEach(viewModel.makers, id: \.id, content: { marker in
+                        Annotation(marker.title, coordinate: marker.coordinate, content: {
+                            Image(systemName: "mappin.circle.fill")
+                                .renderingMode(.template)
+                                .resizable()
+                                .frame(width: 30, height: 30)
+                                .foregroundStyle(Color.red)
+                        })
+                    })
+                    
+                    UserAnnotation(anchor: .center)
+                }
     }
 }
 
