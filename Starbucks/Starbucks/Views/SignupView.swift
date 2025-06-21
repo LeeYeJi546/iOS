@@ -53,7 +53,9 @@ struct SignupView: View {
             
             Button(action: {
                 viewModel.updateUser()
-                dismiss()
+                if viewModel.isLoggedIn {
+                    dismiss()
+                }
             }) {
                 Image(.signup)
                     .resizable()

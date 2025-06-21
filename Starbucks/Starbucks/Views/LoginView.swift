@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject private var loginViewModel = LoginViewModel()
+    @StateObject private var loginViewModel: LoginViewModel
     @FocusState private var isIDFocused: Bool
     @FocusState private var isPWDFocused: Bool
     
@@ -74,7 +74,7 @@ struct LoginView: View {
                 Spacer()
                     .frame(height: 47)
                 Button(action: {
-                    print("로그인하는 중•••")
+                    loginViewModel.login()
                 }) {
                     Image(.login)
                         .resizable()
@@ -114,6 +114,6 @@ struct LoginView: View {
     }
         
  #Preview {
- LoginView()
+     LoginView()
  }
  
